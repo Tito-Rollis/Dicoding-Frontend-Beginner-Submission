@@ -12,7 +12,7 @@
                 flex-direction: column;
               }
               .input-form{
-                width: 300px;
+                width: 100%;
                 padding:16px;
               }
             }
@@ -24,37 +24,71 @@
             <h1 class="text-white font-semibold text-xl md:text-2xl">Bookshelf Apps</h1>
         </div>
 
-        <!-- Form Input Section-->
-        <div class="container mt-6">
-            <!-- Form Input -->
-            <form class="container items-center gap-y-4">
-                <div class="container  w-min gap-y-2">
-                    <label class="text-base text-purple-700 font-semibold"> Judul Buku</label>
-                    <input
-                        class="border border-purple-400 rounded-md input-form"
-                        type="text"
-                        placeholder="Masukkan Judul Buku"
-                    />
+        <!-- Content -->
+        <div class="container justify-center m-auto w-96">
+            <!-- Form Input Section-->
+            <div class="container w-full  mt-6">
+                <!-- Form Input -->
+                <form class="container w-full items-center gap-y-4">
+                    <div class="container  gap-y-2">
+                        <label class="text-base text-purple-700 font-semibold"> Judul Buku</label>
+                        <input
+                            required
+                            id="judul-buku"
+                            class="border border-purple-400 rounded-md input-form"
+                            type="text"
+                            placeholder="Masukkan Judul Buku"
+                        />
+                    </div>
+
+                    <div class="container gap-y-2">
+                        <label class="text-base text-purple-700 font-semibold "> Penulis Buku</label>
+                        <input
+                            required
+                            id="penulis-buku"
+                            class="border border-purple-400 rounded-md input-form"
+                            type="text"
+                            placeholder="Masukkan Penulis Buku"
+                        />
+                    </div>
+
+                    <div class="container gap-y-2">
+                        <label class="text-base text-purple-700 font-semibold "> Tahun</label>
+                        <input
+                            required
+                            id="tahun-buku"
+                            class="border border-purple-400 rounded-md input-form"
+                            type="number"
+                            placeholder="Masukkan Tahun Rilis Buku"
+                        />
+                    </div>
+
+                    <!-- Buttons -->
+                    <!-- <div class="container gap-y-2 mt-4"> -->
+                    <button
+                        type="submit"
+                        id="completed-btn"
+                        class="container items-center gap-y-2 mt-4 bg-purple-700 pt-3 py-4 text-center text-white w-full cursor-pointer rounded-md hover:bg-purple-800 transition"
+                    >
+                        <h1>Add To Bookshelf</h1>
+                    </button>
+                    <!-- </div> -->
+                </form>
+            </div>
+
+            <!-- Boookshelfs -->
+            <div class="container gap-y-4 mt-8">
+                <!-- Unread Books -->
+                <div id="unread-books-container" class="container border border-purple-400 rounded-lg p-4">
+                    <h1 class="text-2xl font-semibold">Belum Selesai Dibaca</h1>
                 </div>
 
-                <div class="container w-min  gap-y-2">
-                    <label class="text-base text-purple-700 font-semibold "> Penulis Buku</label>
-                    <input
-                        class="border border-purple-400 rounded-md input-form"
-                        type="text"
-                        placeholder="Masukkan Penulis Buku"
-                    />
+                <!-- Readed Books -->
+                <div id="readed-books-container" class="container border border-purple-400 rounded-lg p-4">
+                    <h1 class="text-2xl font-semibold">Selesai Dibaca</h1>
                 </div>
-
-                <div class="container w-min  gap-y-2">
-                    <label class="text-base text-purple-700 font-semibold "> Tahun</label>
-                    <input
-                        class="border border-purple-400 rounded-md input-form"
-                        type="number"
-                        placeholder="Masukkan Tahun Rilis Buku"
-                    />
-                </div>
-            </form>
+            </div>
         </div>
     </body>
+    <script src="./index.js"></script>
 </html>
