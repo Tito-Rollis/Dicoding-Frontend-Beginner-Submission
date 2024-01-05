@@ -12,28 +12,17 @@ let tahunBukuInput = '';
 let statusBukuInput = '';
 
 // Retrieve existing array from localStorage
-const existingArrayString = localStorage.getItem('Books');
+const getLocalStorage = localStorage.getItem('Books');
 
 // Parse the JSON string into an array or create a new empty array if it doesn't exist
-const existingArray = existingArrayString ? JSON.parse(existingArrayString) : [];
+const existingArray = getLocalStorage ? JSON.parse(getLocalStorage) : [];
 
 // Functions
-const isEmpty = () => {
-    console.log('change');
-};
-
 const getAllBooks = () => {
-    isEmpty();
     const getCompletedBooks =
-        existingArray.length === 0
-            ? []
-            : JSON.parse(localStorage.getItem('Books')).filter((book) => book.isComplete === true);
-
+        existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === true);
     const getIncompletedBooks =
-        existingArray.length === 0
-            ? []
-            : JSON.parse(localStorage.getItem('Books')).filter((book) => book.isComplete === false);
-
+        existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === false);
     // Insert completedBook to readedBooksContainer
     getCompletedBooks.forEach((book) => {
         const newDiv = document.createElement('div');
@@ -58,7 +47,7 @@ const getAllBooks = () => {
             <p>Hapus Buku</p>
         </div>`;
 
-        if (existingArray.length === 0) {
+        if (getCompletedBooks.length === 0) {
             return;
         } else {
             return readedBooksContainer.appendChild(newDiv);
@@ -92,7 +81,7 @@ const getAllBooks = () => {
                         </div>
     `;
 
-        if (existingArray.length === 0) {
+        if (getIncompletedBooks.length === 0) {
             return;
         } else {
             return unreadBooksContainer.appendChild(newDiv);
@@ -101,6 +90,11 @@ const getAllBooks = () => {
 };
 
 // Event Listeners
+const deleteHandler = (id) => {
+    existingArray.splice(id, 1);
+    localStorage.setItem(existingArray);
+};
+
 const formChangeHandler = () => {
     if (judulBukuInput !== '' && penulisBukuInput !== '' && tahunBukuInput !== '') {
         completeBtn.style.pointerEvents = 'auto';
@@ -119,22 +113,10 @@ tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
 statusBuku.addEventListener('input', (e) => (statusBukuInput = e.target.value));
 
 completeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    console.log(
-        (judulBukuInput === undefined || judulBukuInput === '') &&
-            (penulisBukuInput === undefined || penulisBukuInput === '') &&
-            (tahunBukuInput === undefined || tahunBukuInput === '')
-    );
-    if (
-        (judulBukuInput === undefined || judulBukuInput === '') &&
-        (penulisBukuInput === undefined || penulisBukuInput === '') &&
-        (tahunBukuInput === undefined || tahunBukuInput === '')
-    ) {
-        alert('Form should be filled');
-        return;
-    }
+    const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
+
     const newBook = {
-        id: existingArray.length === 0 ? 0 : existingArray.length - 1,
+        id,
         title: judulBukuInput,
         author: penulisBukuInput,
         year: tahunBukuInput,
@@ -144,8 +126,4 @@ completeBtn.addEventListener('click', (e) => {
     existingArray.push(newBook);
     localStorage.setItem('Books', JSON.stringify(existingArray));
     return getAllBooks();
-    // Reset input values for the next click
-    // judulBukuInput = undefined;
-    // penulisBukuInput = undefined;
-    // tahunBukuInput = undefined;
 });
