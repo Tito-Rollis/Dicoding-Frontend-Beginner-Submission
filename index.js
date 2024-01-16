@@ -18,48 +18,15 @@ const getLocalStorage = localStorage.getItem('Books');
 const existingArray = getLocalStorage ? JSON.parse(getLocalStorage) : [];
 
 // Functions
-const getAllBooks = () => {
-    const getCompletedBooks =
-        existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === true);
+
+const getUnreadBooks = () => {
+    let newDiv = '';
     const getIncompletedBooks =
         existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === false);
-    // Insert completedBook to readedBooksContainer
-    getCompletedBooks.forEach((book) => {
-        const newDiv = document.createElement('div');
-        newDiv.className = 'box border border-purple-400 rounded-lg p-4 mt-3 gap-y-1';
-        newDiv.id = book.id;
-        newDiv.innerHTML = `<h1 class="text-xl font-medium">${book.title}</h1>
-    <p>Penulis: ${book.author}</p>
-    <p>Tahun Buku: ${book.year}</p>
 
-    <!-- Info -->
-    <div class="flex items-center justify-between w-full">
-        <!-- Chips -->
-        <div
-            class="box whitespace-nowrap justify-center rounded-lg text-sm h-8 px-4 w-min text-center leading-5 bg-green-400 text-green-700 font-medium"
-        >
-            <p>Sudah dibaca</p>
-        </div>
-
-        <div
-            class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
-        >
-            <p>Hapus Buku</p>
-        </div>`;
-
-        if (getCompletedBooks.length === 0) {
-            return;
-        } else {
-            return readedBooksContainer.appendChild(newDiv);
-        }
-    });
-
-    // Insert incompletedBook to unreadedBooksContainer
     getIncompletedBooks.forEach((book) => {
-        const newDiv = document.createElement('div');
-        newDiv.className = 'box border border-purple-400 rounded-lg p-4 mt-3 gap-y-1';
-        newDiv.id = book.id;
-        newDiv.innerHTML = `
+        newDiv += `
+        <div id="${book.id}" class="box border border-purple-400 rounded-lg p-4 mt-3 gap-y-1">
     <h1 class="text-xl font-medium">${book.title}</h1>
                         <p>Penulis: ${book.author}</p>
                         <p>Tahun Buku: ${book.year}</p>
@@ -79,14 +46,57 @@ const getAllBooks = () => {
                                 <p>Hapus Buku</p>
                             </div>
                         </div>
+                        </div>
     `;
-
-        if (getIncompletedBooks.length === 0) {
-            return;
-        } else {
-            return unreadBooksContainer.appendChild(newDiv);
-        }
     });
+    if (getIncompletedBooks.length === 0) {
+        return;
+    } else {
+        return (unreadBooksContainer.innerHTML = newDiv);
+    }
+};
+
+const getReadBooks = () => {
+    let newDiv = '';
+    const getCompletedBooks =
+        existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === true);
+
+    getCompletedBooks.forEach((book) => {
+        newDiv += `
+        <div id="${book.id}" class="box border border-purple-400 rounded-lg p-4 mt-3 gap-y-1">
+        <h1 class="text-xl font-medium">${book.title}</h1>
+        <p>Penulis: ${book.author}</p>
+        <p>Tahun Buku: ${book.year}</p>
+    
+        <!-- Info -->
+        <div class="flex items-center justify-between w-full">
+            <!-- Chips -->
+            <div
+                class="box whitespace-nowrap justify-center rounded-lg text-sm h-8 px-4 w-min text-center leading-5 bg-green-400 text-green-700 font-medium"
+            >
+                <p>Sudah dibaca</p>
+            </div>
+    
+            <div
+                class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
+            >
+                <p>Hapus Buku</p>
+            </div>
+            
+            </div></div>`;
+    });
+
+    if (getCompletedBooks.length === 0) {
+        return;
+    } else {
+        return (readedBooksContainer.innerHTML = newDiv);
+    }
+};
+
+const getAllBooks = () => {
+    getReadBooks();
+
+    getUnreadBooks();
 };
 
 // Event Listeners
