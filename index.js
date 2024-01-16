@@ -20,7 +20,7 @@ const existingArray = getLocalStorage ? JSON.parse(getLocalStorage) : [];
 // Functions
 
 const getUnreadBooks = () => {
-    let newDiv = '';
+    let newDiv = '<h1 class="text-2xl font-semibold">Belum Selesai Dibaca</h1> ';
     const getIncompletedBooks =
         existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === false);
 
@@ -40,7 +40,7 @@ const getUnreadBooks = () => {
                                 <p>Belum dibaca</p>
                             </div>
 
-                            <div
+                            <div onclick="deleteHandler(${getIncompletedBooks.findIndex((e) => e.id === book.id)})"
                                 class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
                             >
                                 <p>Hapus Buku</p>
@@ -49,15 +49,11 @@ const getUnreadBooks = () => {
                         </div>
     `;
     });
-    if (getIncompletedBooks.length === 0) {
-        return;
-    } else {
-        return (unreadBooksContainer.innerHTML = newDiv);
-    }
+    return (unreadBooksContainer.innerHTML = newDiv);
 };
 
 const getReadBooks = () => {
-    let newDiv = '';
+    let newDiv = '<h1 class="text-2xl font-semibold">Selesai Dibaca</h1>';
     const getCompletedBooks =
         existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === true);
 
@@ -77,7 +73,7 @@ const getReadBooks = () => {
                 <p>Sudah dibaca</p>
             </div>
     
-            <div
+            <div onclick="deleteHandler(${getCompletedBooks.findIndex((e) => e.id === book.id)})"
                 class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
             >
                 <p>Hapus Buku</p>
@@ -86,11 +82,7 @@ const getReadBooks = () => {
             </div></div>`;
     });
 
-    if (getCompletedBooks.length === 0) {
-        return;
-    } else {
-        return (readedBooksContainer.innerHTML = newDiv);
-    }
+    return (readedBooksContainer.innerHTML = newDiv);
 };
 
 const getAllBooks = () => {
@@ -102,7 +94,8 @@ const getAllBooks = () => {
 // Event Listeners
 const deleteHandler = (id) => {
     existingArray.splice(id, 1);
-    localStorage.setItem(existingArray);
+    localStorage.setItem('Books', JSON.stringify(existingArray));
+    getAllBooks();
 };
 
 const formChangeHandler = () => {
@@ -121,7 +114,6 @@ judulBuku.addEventListener('input', (e) => (judulBukuInput = e.target.value));
 penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value));
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
 statusBuku.addEventListener('input', (e) => (statusBukuInput = e.target.value));
-
 completeBtn.addEventListener('click', (e) => {
     const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
 
