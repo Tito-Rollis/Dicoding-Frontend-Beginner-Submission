@@ -115,6 +115,8 @@ penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value)
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
 statusBuku.addEventListener('input', (e) => (statusBukuInput = e.target.value));
 completeBtn.addEventListener('click', (e) => {
+
+    // Set id manually for each new book
     const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
 
     const newBook = {
