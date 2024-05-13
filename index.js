@@ -5,20 +5,21 @@ const tahunBuku = document.getElementById('tahun-buku');
 const readedBooksContainer = document.getElementById('readed-books-container');
 const unreadBooksContainer = document.getElementById('unread-books-container');
 const statusBuku = document.getElementById('read-checked');
+const searchBook = document.getElementById('search-book');
 
 let penulisBukuInput = '';
 let judulBukuInput = '';
 let tahunBukuInput = '';
 let statusBukuInput = '';
+let searchBukuInput = '';
 
 // Retrieve existing array from localStorage
 const getLocalStorage = localStorage.getItem('Books');
 
 // Parse the JSON string into an array or create a new empty array if it doesn't exist
-const existingArray = getLocalStorage ? JSON.parse(getLocalStorage) : [];
+let existingArray = getLocalStorage ? JSON.parse(getLocalStorage) : [];
 
 // Functions
-
 const getUnreadBooks = () => {
     let newDiv = '<h1 class="text-2xl font-semibold">Belum Selesai Dibaca</h1> ';
     const getIncompletedBooks =
@@ -110,12 +111,25 @@ const formChangeHandler = () => {
     }
 };
 
+const searchBookHandler = (e) => {
+    const searchBukuInput = existingArray.filter((book) =>
+        book.title.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+
+    // If no search then reset to begin
+    if (e.target.value.length === 0) {
+        existingArray = JSON.parse(getLocalStorage);
+    } else {
+        existingArray = searchBukuInput;
+    }
+    getAllBooks();
+};
+
 judulBuku.addEventListener('input', (e) => (judulBukuInput = e.target.value));
 penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value));
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
 statusBuku.addEventListener('input', (e) => (statusBukuInput = e.target.value));
 completeBtn.addEventListener('click', (e) => {
-
     // Set id manually for each new book
     const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
 
@@ -131,3 +145,5 @@ completeBtn.addEventListener('click', (e) => {
     localStorage.setItem('Books', JSON.stringify(existingArray));
     return getAllBooks();
 });
+
+searchBook.addEventListener('input', (e) => searchBookHandler(e));
