@@ -7,6 +7,7 @@ const unreadBooksContainer = document.getElementById('unread-books-container');
 const statusBuku = document.getElementById('read-checked');
 const searchBook = document.getElementById('search-book');
 const unreadBooksTemplate = document.querySelector('[unread-books-template]');
+const readBooksTemplate = document.querySelector('[read-books-template]');
 
 let penulisBukuInput = '';
 let judulBukuInput = '';
@@ -44,47 +45,39 @@ const getUnreadBooks = () => {
 
         bookContainer.setAttribute('id', `${book.id}`);
 
-        deleteBtn.addEventListener('click', () =>
-            deleteHandler(getIncompletedBooks.findIndex((el) => el.id === book.id))
-        );
+        deleteBtn.addEventListener('click', () => deleteHandler(existingArray.findIndex((el) => el.id === book.id)));
 
         return unreadBooksContainer.append(bookContainer);
     });
 };
 
 const getReadBooks = () => {
-    let newDiv = '<h1 class="text-2xl font-semibold">Selesai Dibaca</h1>';
     const getCompletedBooks =
         existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === true);
 
+    // RECATCH the unread Books if getIncompleteBooks have 1 or more books
+    if (getCompletedBooks.length >= 1) {
+        readedBooksContainer.textContent = '';
+    }
+
     getCompletedBooks.forEach((book) => {
-        newDiv += `
-        <div id="${book.id}" class="box book border border-purple-400 rounded-lg p-4 mt-3 gap-y-1">
-        <h1 class="text-xl font-medium">${book.title}</h1>
-        <p>Penulis: ${book.author}</p>
-        <p>Tahun Buku: ${book.year}</p>
-    
-        <!-- Info -->
-        <div class="flex items-center justify-between w-full">
-            <!-- Chips -->
-            <div
-                class="box whiunreadBooksTemplatepace-nowrap justify-center rounded-lg text-sm h-8 px-4 w-max text-center leading-5 bg-green-400 text-green-700 font-medium"
-            >
-                <p>Sudah dibaca</p>
-            </div>
-    
-            <div onclick="deleteHandler(${getCompletedBooks.findIndex((e) => e.id === book.id)})"
-                class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
-            >
-                <p>Hapus Buku</p>
-            </div>
-            
-            </div></div>`;
+        const bookContainer = readBooksTemplate.content.cloneNode(true).children[0];
+        let title = bookContainer.querySelector('[read-title]');
+        let author = bookContainer.querySelector('[read-author]');
+        let tahunBuku = bookContainer.querySelector('[read-tahun]');
+        let deleteBtn = bookContainer.querySelector('[read-delete-btn]');
+        
+        title.textContent = book.title;
+        author.textContent = book.author;
+        tahunBuku.textContent = `Tahun Buku: ${book.year}`;
+
+        bookContainer.setAttribute('id', `${book.id}`);
+
+        deleteBtn.addEventListener('click', () => deleteHandler(existingArray.findIndex((el) => el.id === book.id)));
+
+        return readedBooksContainer.append(bookContainer);
     });
-
-    return (readedBooksContainer.innerHTML = newDiv);
 };
-
 const getAllBooks = () => {
     getReadBooks();
 
@@ -127,12 +120,8 @@ const searchBookHandler = (e) => {
 judulBuku.addEventListener('input', (e) => (judulBukuInput = e.target.value));
 penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value));
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
-statusBuku.addEventListener('input', (e) => {
-    statusBukuInput = e.target;
-    console.log(statusBukuInput);
-});
+statusBuku.addEventListener('input', (e) => (statusBukuInput = statusBuku.checked));
 completeBtn.addEventListener('click', (e) => {
-    console.log(statusBukuInput);
     // Set id manually for each new book
     const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
 
@@ -141,7 +130,7 @@ completeBtn.addEventListener('click', (e) => {
         title: judulBukuInput,
         author: penulisBukuInput,
         year: tahunBukuInput,
-        isComplete: statusBukuInput === 'sudah' ? true : false,
+        isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
     };
 
     existingArray.push(newBook);

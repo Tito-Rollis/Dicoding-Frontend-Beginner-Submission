@@ -110,18 +110,22 @@
             <!-- Boookshelfs -->
             <div class="box gap-y-4 mt-8">
                 <!-- Unread Books -->
-                <div id="unread-books-container" class="box border border-purple-400 rounded-lg p-4">
-                    <h1 class="text-2xl font-semibold">Belum Selesai Dibaca</h1>
+                <div class="box border border-purple-400 rounded-lg p-4">
+                    <h1 class="text-2xl font-semibold text-yellow-400">Belum Selesai Dibaca</h1>
+                    <div id="unread-books-container"></div>
                 </div>
 
                 <!-- Readed Books -->
-                <div id="readed-books-container" class="box border border-purple-400 rounded-lg p-4"></div>
+                <div class="box border border-purple-400 rounded-lg p-4">
+                    <h1 class="text-2xl font-semibold text-green-400">Sudah Selesai Dibaca</h1>
+                    <div id="readed-books-container"></div>
+                </div>
             </div>
         </div>
 
         <!-- Template for Unread Books -->
         <template unread-books-template>
-            <div class="box book border border-purple-400 rounded-lg p-4 mt-3 gap-y-1">
+            <div class="box unread-book border border-purple-400 rounded-lg p-4 mt-3 gap-y-1">
                 <h1 unread-title class="text-xl font-medium"></h1>
                 <p unread-author></p>
                 <p unread-tahun></p>
@@ -137,6 +141,32 @@
 
                     <div
                         unread-delete-btn
+                        class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
+                    >
+                        <p>Hapus Buku</p>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Template for Read Books -->
+        <template read-books-template>
+            <div class="box book border border-purple-400 rounded-lg p-4 mt-3 gap-y-1">
+                <h1 read-title class="text-xl font-medium"></h1>
+                <p read-author></p>
+                <p read-tahun></p>
+
+                <!-- Info -->
+                <div class="flex items-center justify-between w-full">
+                    <!-- Chips -->
+                    <div
+                        class="box whitespace-nowrap justify-center rounded-lg text-sm h-8 px-4 w-max text-center leading-5 bg-green-400 text-green-700 font-medium"
+                    >
+                        <p>Sudah dibaca</p>
+                    </div>
+
+                    <div
+                        read-delete-btn
                         class=" h-8 px-4 text-center font-medium flex items-center cursor-pointer text-red-700 border border-red-700 rounded-lg"
                     >
                         <p>Hapus Buku</p>
