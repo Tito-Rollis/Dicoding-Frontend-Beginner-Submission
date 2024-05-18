@@ -42,6 +42,7 @@ const getUnreadBooks = () => {
         title.textContent = book.title;
         author.textContent = book.author;
         tahunBuku.textContent = `Tahun Buku: ${book.year}`;
+        bookContainer.style.display = book.title.toLowerCase().includes(searchBukuInput) ? 'block' : 'none';
 
         bookContainer.setAttribute('id', `${book.id}`);
 
@@ -66,10 +67,11 @@ const getReadBooks = () => {
         let author = bookContainer.querySelector('[read-author]');
         let tahunBuku = bookContainer.querySelector('[read-tahun]');
         let deleteBtn = bookContainer.querySelector('[read-delete-btn]');
-        
+
         title.textContent = book.title;
         author.textContent = book.author;
         tahunBuku.textContent = `Tahun Buku: ${book.year}`;
+        bookContainer.style.display = book.title.toLowerCase().includes(searchBukuInput) ? 'block' : 'none';
 
         bookContainer.setAttribute('id', `${book.id}`);
 
@@ -104,24 +106,16 @@ const formChangeHandler = () => {
 };
 
 const searchBookHandler = (e) => {
-    const searchBukuInput = existingArray.filter((book) =>
-        book.title.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-
-    // If no search then reset to begin
-    if (e.target.value.length === 0) {
-        existingArray = JSON.parse(getLocalStorage);
-    } else {
-        existingArray = searchBukuInput;
-    }
+    searchBukuInput = e.target.value.toLowerCase();
     getAllBooks();
 };
 
+// If no search then reset to begin
 judulBuku.addEventListener('input', (e) => (judulBukuInput = e.target.value));
 penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value));
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
-statusBuku.addEventListener('input', (e) => (statusBukuInput = statusBuku.checked));
-completeBtn.addEventListener('click', (e) => {
+statusBuku.addEventListener('input', () => (statusBukuInput = statusBuku.checked));
+completeBtn.addEventListener('click', () => {
     // Set id manually for each new book
     const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
 
