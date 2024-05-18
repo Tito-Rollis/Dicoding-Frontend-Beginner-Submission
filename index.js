@@ -1,9 +1,10 @@
 const completeBtn = document.getElementById('completed-btn');
-const judulBuku = document.getElementById('judul-buku');
-const penulisBuku = document.getElementById('penulis-buku');
-const tahunBuku = document.getElementById('tahun-buku');
+const judulBuku = document.getElementById('judul-buku-input');
+const penulisBuku = document.getElementById('penulis-buku-input');
+const tahunBuku = document.getElementById('tahun-buku-input');
 const readedBooksContainer = document.getElementById('readed-books-container');
 const unreadBooksContainer = document.getElementById('unread-books-container');
+const inputFormContainer = document.querySelector('[input-form-container]');
 const statusBuku = document.getElementById('read-checked');
 const searchBook = document.getElementById('search-book');
 const unreadBooksTemplate = document.querySelector('[unread-books-template]');
@@ -103,6 +104,13 @@ const formChangeHandler = () => {
         completeBtn.classList.remove('bg-purple-700');
         completeBtn.classList.add('bg-gray-400');
     }
+
+    // Check if book were existed
+    existingArray.map((book) => {
+        if (book.title.toLowerCase() === judulBukuInput.toLowerCase()) {
+            alert(`Buku dengan judul "${judulBukuInput}" sudah ada!`);
+        }
+    });
 };
 
 const searchBookHandler = (e) => {
@@ -110,7 +118,7 @@ const searchBookHandler = (e) => {
     getAllBooks();
 };
 
-// If no search then reset to begin
+inputFormContainer.addEventListener('input', () => formChangeHandler());
 judulBuku.addEventListener('input', (e) => (judulBukuInput = e.target.value));
 penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value));
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
@@ -127,6 +135,10 @@ completeBtn.addEventListener('click', () => {
         isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
     };
 
+    existingArray.map((book) => {
+        if (book.title.toLowerCase().includes(newBook.title)) {
+        }
+    });
     existingArray.push(newBook);
     localStorage.setItem('Books', JSON.stringify(existingArray));
     return getAllBooks();
