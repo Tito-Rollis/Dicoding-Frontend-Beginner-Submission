@@ -39,6 +39,7 @@ const getUnreadBooks = () => {
         let author = bookContainer.querySelector('[unread-author]');
         let tahunBuku = bookContainer.querySelector('[unread-tahun]');
         let deleteBtn = bookContainer.querySelector('[unread-delete-btn]');
+        let sudahBacaBtn = bookContainer.querySelector('[sudah-baca-handler]');
 
         title.textContent = book.title;
         author.textContent = book.author;
@@ -46,8 +47,9 @@ const getUnreadBooks = () => {
         bookContainer.style.display = book.title.toLowerCase().includes(searchBukuInput) ? 'block' : 'none';
 
         bookContainer.setAttribute('id', `${book.id}`);
-
+        console.log(book);
         deleteBtn.addEventListener('click', () => deleteHandler(existingArray.findIndex((el) => el.id === book.id)));
+        sudahBacaBtn.addEventListener('click', () => sudahBacaHandler(book));
 
         return unreadBooksContainer.append(bookContainer);
     });
@@ -87,7 +89,7 @@ const getAllBooks = () => {
     getUnreadBooks();
 };
 
-// Event Listeners
+// Event Handlers
 const deleteHandler = (id) => {
     existingArray.splice(id, 1);
     localStorage.setItem('Books', JSON.stringify(existingArray));
@@ -118,6 +120,30 @@ const searchBookHandler = (e) => {
     getAllBooks();
 };
 
+const sudahBacaHandler = (item) => {
+    for (existing of existingArray) {
+        if (existing.title === item.title) {
+            existing.isComplete = true;
+        }
+    }
+    localStorage.setItem('Books', JSON.stringify(existingArray));
+    console.log(existingArray);
+    return getAllBooks();
+
+    // existingArray.map((book) => {
+    //     ({ ...book, author: 'tes' });
+    //     return book;
+    //     // if (book.title === 'belom 2') {
+    //     //     return { ...book, author: 'tes' };
+
+    //     //     // localStorage.setItem('Books', JSON.stringify(existingArray));
+    //     //     // return getAllBooks();
+    //     // }
+    // });
+};
+const belumBacaHandler = () => {};
+
+// Event Listener
 inputFormContainer.addEventListener('input', () => formChangeHandler());
 judulBuku.addEventListener('input', (e) => (judulBukuInput = e.target.value));
 penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value));
