@@ -18,14 +18,19 @@ let searchBukuInput = '';
 
 // Retrieve existing array from localStorage
 const getLocalStorage = localStorage.getItem('Books');
+const getRakSudahDibaca = localStorage.getItem('rak-sudah-dibaca');
+const getRakBelumDibaca = localStorage.getItem('rak-belum-dibaca');
 
 // Parse the JSON string into an array or create a new empty array if it doesn't exist
+
 let existingArray = getLocalStorage ? JSON.parse(getLocalStorage) : [];
+let rakSudahDibaca = getRakSudahDibaca ? JSON.parse(getRakSudahDibaca) : [];
+let rakBelumDibaca = getRakBelumDibaca ? JSON.parse(getRakBelumDibaca) : [];
 
 // Functions
 const getUnreadBooks = () => {
     const getIncompletedBooks =
-        existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === false);
+        rakBelumDibaca.length === 0 ? [] : rakBelumDibaca.filter((book) => book.isComplete === false);
 
     // RECATCH the unread Books if getIncompleteBooks have 1 or more books
     if (getIncompletedBooks.length >= 1) {
@@ -48,7 +53,7 @@ const getUnreadBooks = () => {
 
         bookContainer.setAttribute('id', `${book.id}`);
         console.log(book);
-        deleteBtn.addEventListener('click', () => deleteHandler(existingArray.findIndex((el) => el.id === book.id)));
+        deleteBtn.addEventListener('click', () => deleteHandler(rakBelumDibaca.findIndex((el) => el.id === book.id)));
         sudahBacaBtn.addEventListener('click', () => sudahBacaHandler(book));
 
         return unreadBooksContainer.append(bookContainer);
@@ -57,7 +62,7 @@ const getUnreadBooks = () => {
 
 const getReadBooks = () => {
     const getCompletedBooks =
-        existingArray.length === 0 ? [] : existingArray.filter((book) => book.isComplete === true);
+        rakSudahDibaca.length === 0 ? [] : rakSudahDibaca.filter((book) => book.isComplete === true);
 
     // RECATCH the unread Books if getIncompleteBooks have 1 or more books
     if (getCompletedBooks.length >= 1) {
@@ -78,7 +83,7 @@ const getReadBooks = () => {
 
         bookContainer.setAttribute('id', `${book.id}`);
 
-        deleteBtn.addEventListener('click', () => deleteHandler(existingArray.findIndex((el) => el.id === book.id)));
+        deleteBtn.addEventListener('click', () => deleteHandler(rakSudahDibaca.findIndex((el) => el.id === book.id)));
 
         return readedBooksContainer.append(bookContainer);
     });
@@ -108,11 +113,11 @@ const formChangeHandler = () => {
     }
 
     // Check if book were existed
-    existingArray.map((book) => {
-        if (book.title.toLowerCase() === judulBukuInput.toLowerCase()) {
-            alert(`Buku dengan judul "${judulBukuInput}" sudah ada!`);
-        }
-    });
+    // existingArray.map((book) => {
+    //     if (book.title.toLowerCase() === judulBukuInput.toLowerCase()) {
+    //         alert(`Buku dengan judul "${judulBukuInput}" sudah ada!`);
+    //     }
+    // });
 };
 
 const searchBookHandler = (e) => {
@@ -127,7 +132,6 @@ const sudahBacaHandler = (item) => {
         }
     }
     localStorage.setItem('Books', JSON.stringify(existingArray));
-    console.log(existingArray);
     return getAllBooks();
 
     // existingArray.map((book) => {
@@ -150,23 +154,34 @@ penulisBuku.addEventListener('input', (e) => (penulisBukuInput = e.target.value)
 tahunBuku.addEventListener('input', (e) => (tahunBukuInput = e.target.value));
 statusBuku.addEventListener('input', () => (statusBukuInput = statusBuku.checked));
 completeBtn.addEventListener('click', () => {
-    // Set id manually for each new book
-    const id = existingArray.length === 0 ? 0 : existingArray[existingArray.length - 1].id + 1;
+    // If the book not read yet then push it to rakBelumBaca
+    if (statusBukuInput === '' || statusBukuInput === false) {
+        const newBook = {
+            id: rakBelumDibaca.length === 0 ? 0 : rakBelumDibaca[rakBelumDibaca.length - 1].id + 1,
+            title: judulBukuInput,
+            author: penulisBukuInput,
+            year: tahunBukuInput,
+            isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
+        };
+        rakBelumDibaca.push(newBook);
+        localStorage.setItem('rak-belum-dibaca', JSON.stringify(rakBelumDibaca));
+    }
+    // If the book was read then push it to rakSudahBaca
+    else {
+        const newBook = {
+            id: rakSudahDibaca.length === 0 ? 0 : rakSudahDibaca[rakSudahDibaca.length - 1].id + 1,
+            title: judulBukuInput,
+            author: penulisBukuInput,
+            year: tahunBukuInput,
+            isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
+        };
+        rakSudahDibaca.push(newBook);
+        localStorage.setItem('rak-sudah-dibaca', JSON.stringify(rakSudahDibaca));
+    }
 
-    const newBook = {
-        id,
-        title: judulBukuInput,
-        author: penulisBukuInput,
-        year: tahunBukuInput,
-        isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
-    };
-
-    existingArray.map((book) => {
-        if (book.title.toLowerCase().includes(newBook.title)) {
-        }
-    });
-    existingArray.push(newBook);
-    localStorage.setItem('Books', JSON.stringify(existingArray));
+    // existingArray.push(newBook);
+    // localStorage.setItem('Books', JSON.stringify(existingArray));
     return getAllBooks();
 });
+
 searchBook.addEventListener('input', (e) => searchBookHandler(e));
