@@ -29,22 +29,16 @@ let rakBelumDibaca = getRakBelumDibaca ? JSON.parse(getRakBelumDibaca) : [];
 
 // Functions
 const getUnreadBooks = () => {
-    const getIncompletedBooks =
-        rakBelumDibaca.length === 0 ? [] : rakBelumDibaca.filter((book) => book.isComplete === false);
-
-    // RECATCH the unread Books if getIncompleteBooks have 1 or more books
-    if (getIncompletedBooks.length >= 1) {
-        unreadBooksContainer.textContent = '';
-    }
+    unreadBooksContainer.textContent = ''; // Reset DOM to recatch the data
 
     // Adding all unread books to unreadBooksContainer as Child Element
-    getIncompletedBooks.forEach((book) => {
+    rakBelumDibaca.map((book) => {
         const bookContainer = unreadBooksTemplate.content.cloneNode(true).children[0];
         let title = bookContainer.querySelector('[unread-title]');
         let author = bookContainer.querySelector('[unread-author]');
         let tahunBuku = bookContainer.querySelector('[unread-tahun]');
         let deleteBtn = bookContainer.querySelector('[unread-delete-btn]');
-        let sudahBacaBtn = bookContainer.querySelector('[sudah-baca-handler]');
+        let statusBacaBtn = bookContainer.querySelector('[status-baca-handler]');
 
         title.textContent = book.title;
         author.textContent = book.author;
@@ -52,29 +46,22 @@ const getUnreadBooks = () => {
         bookContainer.style.display = book.title.toLowerCase().includes(searchBukuInput) ? 'block' : 'none';
 
         bookContainer.setAttribute('id', `${book.id}`);
-        console.log(book);
         deleteBtn.addEventListener('click', () => deleteHandler(rakBelumDibaca.findIndex((el) => el.id === book.id)));
-        sudahBacaBtn.addEventListener('click', () => sudahBacaHandler(book));
-
+        statusBacaBtn.addEventListener('click', () => statusBacaHandler(book));
         return unreadBooksContainer.append(bookContainer);
     });
 };
 
 const getReadBooks = () => {
-    const getCompletedBooks =
-        rakSudahDibaca.length === 0 ? [] : rakSudahDibaca.filter((book) => book.isComplete === true);
+    readedBooksContainer.textContent = ''; // Reset DOM to recatch the data
 
-    // RECATCH the unread Books if getIncompleteBooks have 1 or more books
-    if (getCompletedBooks.length >= 1) {
-        readedBooksContainer.textContent = '';
-    }
-
-    getCompletedBooks.forEach((book) => {
+    rakSudahDibaca.forEach((book) => {
         const bookContainer = readBooksTemplate.content.cloneNode(true).children[0];
         let title = bookContainer.querySelector('[read-title]');
         let author = bookContainer.querySelector('[read-author]');
         let tahunBuku = bookContainer.querySelector('[read-tahun]');
         let deleteBtn = bookContainer.querySelector('[read-delete-btn]');
+        let statusBacaBtn = bookContainer.querySelector('[status-baca-handler]');
 
         title.textContent = book.title;
         author.textContent = book.author;
@@ -84,6 +71,7 @@ const getReadBooks = () => {
         bookContainer.setAttribute('id', `${book.id}`);
 
         deleteBtn.addEventListener('click', () => deleteHandler(rakSudahDibaca.findIndex((el) => el.id === book.id)));
+        statusBacaBtn.addEventListener('click', () => statusBacaHandler(book));
 
         return readedBooksContainer.append(bookContainer);
     });
@@ -125,25 +113,40 @@ const searchBookHandler = (e) => {
     getAllBooks();
 };
 
-const sudahBacaHandler = (item) => {
-    for (existing of existingArray) {
-        if (existing.title === item.title) {
-            existing.isComplete = true;
+const statusBacaHandler = (item) => {
+    // If the Book's status are not read, then make it read and push it to rakSudahDibaca
+    if (item.isComplete === '' || item.isComplete === false) {
+        for (const [index, book] of rakBelumDibaca.entries()) {
+            if (book.title === item.title) {
+                book.isComplete = true;
+                book.id = rakSudahDibaca.length;
+                rakBelumDibaca.splice(index, 1);
+                rakSudahDibaca.push(book);
+            }
         }
+        localStorage.setItem('rak-belum-dibaca', JSON.stringify(rakBelumDibaca));
+        localStorage.setItem('rak-sudah-dibaca', JSON.stringify(rakSudahDibaca));
+
+        // Recatch the books
+        return getAllBooks();
     }
-    localStorage.setItem('Books', JSON.stringify(existingArray));
-    return getAllBooks();
 
-    // existingArray.map((book) => {
-    //     ({ ...book, author: 'tes' });
-    //     return book;
-    //     // if (book.title === 'belom 2') {
-    //     //     return { ...book, author: 'tes' };
+    // If the Book's status are read, then make it unread and push it to rakBelumDibaca
+    if (item.isComplete !== '' || item.isComplete === true) {
+        for (const [index, book] of rakSudahDibaca.entries()) {
+            if (book.title === item.title) {
+                book.isComplete = false;
+                book.id = rakBelumDibaca.length;
+                rakSudahDibaca.splice(index, 1);
+                rakBelumDibaca.push(book);
+            }
+        }
+        localStorage.setItem('rak-belum-dibaca', JSON.stringify(rakBelumDibaca));
+        localStorage.setItem('rak-sudah-dibaca', JSON.stringify(rakSudahDibaca));
 
-    //     //     // localStorage.setItem('Books', JSON.stringify(existingArray));
-    //     //     // return getAllBooks();
-    //     // }
-    // });
+        // Recatch the books
+        return getAllBooks();
+    }
 };
 const belumBacaHandler = () => {};
 
@@ -173,14 +176,11 @@ completeBtn.addEventListener('click', () => {
             title: judulBukuInput,
             author: penulisBukuInput,
             year: tahunBukuInput,
-            isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
+            isComplete: statusBukuInput !== '' || statusBukuInput === true ? true : false,
         };
         rakSudahDibaca.push(newBook);
         localStorage.setItem('rak-sudah-dibaca', JSON.stringify(rakSudahDibaca));
     }
-
-    // existingArray.push(newBook);
-    // localStorage.setItem('Books', JSON.stringify(existingArray));
     return getAllBooks();
 });
 
