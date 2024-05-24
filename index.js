@@ -46,7 +46,12 @@ const getUnreadBooks = () => {
         bookContainer.style.display = book.title.toLowerCase().includes(searchBukuInput) ? 'block' : 'none';
 
         bookContainer.setAttribute('id', `${book.id}`);
-        deleteBtn.addEventListener('click', () => deleteHandler(rakBelumDibaca.findIndex((el) => el.id === book.id)));
+        deleteBtn.addEventListener('click', () =>
+            deleteHandler(
+                book.isComplete,
+                rakBelumDibaca.findIndex((el) => el.id === book.id)
+            )
+        );
         statusBacaBtn.addEventListener('click', () => statusBacaHandler(book));
         return unreadBooksContainer.append(bookContainer);
     });
@@ -70,7 +75,12 @@ const getReadBooks = () => {
 
         bookContainer.setAttribute('id', `${book.id}`);
 
-        deleteBtn.addEventListener('click', () => deleteHandler(rakSudahDibaca.findIndex((el) => el.id === book.id)));
+        deleteBtn.addEventListener('click', () =>
+            deleteHandler(
+                book.isComplete,
+                rakSudahDibaca.findIndex((el) => el.id === book.id)
+            )
+        );
         statusBacaBtn.addEventListener('click', () => statusBacaHandler(book));
 
         return readedBooksContainer.append(bookContainer);
@@ -83,10 +93,15 @@ const getAllBooks = () => {
 };
 
 // Event Handlers
-const deleteHandler = (id) => {
-    existingArray.splice(id, 1);
-    localStorage.setItem('Books', JSON.stringify(existingArray));
-    getAllBooks();
+const deleteHandler = (isComplete, id) => {
+    if (isComplete) {
+        rakSudahDibaca.splice(id, 1);
+        localStorage.setItem('rak-sudah-dibaca', JSON.stringify(rakSudahDibaca));
+    } else {
+        rakBelumDibaca.splice(id, 1);
+        localStorage.setItem('rak-belum-dibaca', JSON.stringify(rakBelumDibaca));
+    }
+    return getAllBooks();
 };
 
 const formChangeHandler = () => {
