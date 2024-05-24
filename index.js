@@ -105,6 +105,15 @@ const deleteHandler = (isComplete, id) => {
 };
 
 const formChangeHandler = () => {
+    // Check if book were existed
+    rakSudahDibaca.concat(rakBelumDibaca).map((book) => {
+        if (judulBukuInput.toLowerCase() === book.title.toLowerCase()) {
+            completeBtn.style.pointerEvents = 'none';
+            completeBtn.classList.remove('bg-purple-700');
+            completeBtn.classList.add('bg-gray-400');
+            alert(`Buku dengan judul "${book.title}" sudah ada! Mohon isi dengan judul yang berbeda`);
+        }
+    });
     if (judulBukuInput !== '' && penulisBukuInput !== '' && tahunBukuInput !== '') {
         completeBtn.style.pointerEvents = 'auto';
         completeBtn.classList.remove('bg-gray-400');
@@ -125,7 +134,7 @@ const formChangeHandler = () => {
 
 const searchBookHandler = (e) => {
     searchBukuInput = e.target.value.toLowerCase();
-    getAllBooks();
+    return getAllBooks();
 };
 
 const statusBacaHandler = (item) => {
