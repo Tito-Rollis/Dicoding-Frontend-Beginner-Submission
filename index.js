@@ -111,9 +111,15 @@ const formChangeHandler = () => {
             completeBtn.style.pointerEvents = 'none';
             completeBtn.classList.remove('bg-purple-700');
             completeBtn.classList.add('bg-gray-400');
-            alert(`Buku dengan judul "${book.title}" sudah ada! Mohon isi dengan judul yang berbeda`);
+            judulBuku.setCustomValidity(
+                `Buku dengan judul "${book.title}" sudah ada! Mohon isi dengan judul yang berbeda`
+            );
+        } else {
+            judulBuku.setCustomValidity('');
         }
     });
+    judulBuku.reportValidity();
+
     if (judulBukuInput !== '' && penulisBukuInput !== '' && tahunBukuInput !== '') {
         completeBtn.style.pointerEvents = 'auto';
         completeBtn.classList.remove('bg-gray-400');
