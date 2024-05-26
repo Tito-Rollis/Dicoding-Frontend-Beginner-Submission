@@ -106,19 +106,19 @@ const deleteHandler = (isComplete, id) => {
 
 const formChangeHandler = () => {
     // Check if book were existed
-    rakSudahDibaca.concat(rakBelumDibaca).map((book) => {
-        if (judulBukuInput.toLowerCase() === book.title.toLowerCase()) {
-            completeBtn.style.pointerEvents = 'none';
-            completeBtn.classList.remove('bg-purple-700');
-            completeBtn.classList.add('bg-gray-400');
-            judulBuku.setCustomValidity(
-                `Buku dengan judul "${book.title}" sudah ada! Mohon isi dengan judul yang berbeda`
-            );
-        } else {
-            judulBuku.setCustomValidity('');
-        }
-    });
-    judulBuku.reportValidity();
+    // rakSudahDibaca.concat(rakBelumDibaca).map((book) => {
+    //     if (judulBukuInput.toLowerCase() === book.title.toLowerCase()) {
+    //         completeBtn.style.pointerEvents = 'none';
+    //         completeBtn.classList.remove('bg-purple-700');
+    //         completeBtn.classList.add('bg-gray-400');
+    //         judulBuku.setCustomValidity(
+    //             `Buku dengan judul "${book.title}" sudah ada! Mohon isi dengan judul yang berbeda`
+    //         );
+    //     } else {
+    //         judulBuku.setCustomValidity('');
+    //     }
+    //     judulBuku.reportValidity();
+    // });
 
     if (judulBukuInput !== '' && penulisBukuInput !== '' && tahunBukuInput !== '') {
         completeBtn.style.pointerEvents = 'auto';
@@ -131,11 +131,12 @@ const formChangeHandler = () => {
     }
 
     // Check if book were existed
-    // existingArray.map((book) => {
-    //     if (book.title.toLowerCase() === judulBukuInput.toLowerCase()) {
-    //         alert(`Buku dengan judul "${judulBukuInput}" sudah ada!`);
-    //     }
-    // });
+    rakSudahDibaca.concat(rakBelumDibaca).map((book) => {
+        if (book.title.toLowerCase() === judulBukuInput.toLowerCase()) {
+            judulBuku.style.borderColor = 'red';
+            alert(`Buku dengan judul "${judulBukuInput}" sudah ada!`);
+        }
+    });
 };
 
 const searchBookHandler = (e) => {
@@ -193,7 +194,7 @@ completeBtn.addEventListener('click', () => {
             id: rakBelumDibaca.length === 0 ? 0 : rakBelumDibaca[rakBelumDibaca.length - 1].id + 1,
             title: judulBukuInput,
             author: penulisBukuInput,
-            year: tahunBukuInput,
+            year: parseInt(tahunBukuInput),
             isComplete: statusBukuInput === '' || statusBukuInput === false ? false : true,
         };
         rakBelumDibaca.push(newBook);
@@ -205,7 +206,7 @@ completeBtn.addEventListener('click', () => {
             id: rakSudahDibaca.length === 0 ? 0 : rakSudahDibaca[rakSudahDibaca.length - 1].id + 1,
             title: judulBukuInput,
             author: penulisBukuInput,
-            year: tahunBukuInput,
+            year: parseInt(tahunBukuInput),
             isComplete: statusBukuInput !== '' || statusBukuInput === true ? true : false,
         };
         rakSudahDibaca.push(newBook);
